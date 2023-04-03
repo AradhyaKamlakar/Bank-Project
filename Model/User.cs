@@ -13,9 +13,9 @@ namespace Bank.Model
         [StringLength(50)]
         public string Password { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(10)]
         public string AccountNumber { get; set; }
         public string Role { get; set; }
-        public virtual ICollection<Token> Tokens { get; set;}
+        
     }
 }

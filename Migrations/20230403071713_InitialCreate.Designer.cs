@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bank.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230331112544_InitialCreate")]
+    [Migration("20230403071713_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -54,9 +54,6 @@ namespace Bank.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TokenId"));
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("NoShowCount")
                         .HasColumnType("int");
 
@@ -82,8 +79,6 @@ namespace Bank.Migrations
 
                     b.HasKey("TokenId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Tokens");
                 });
 
@@ -97,8 +92,8 @@ namespace Bank.Migrations
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -117,22 +112,6 @@ namespace Bank.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Bank.Model.Token", b =>
-                {
-                    b.HasOne("Bank.Model.User", "users")
-                        .WithMany("Tokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("users");
-                });
-
-            modelBuilder.Entity("Bank.Model.User", b =>
-                {
-                    b.Navigation("Tokens");
                 });
 #pragma warning restore 612, 618
         }

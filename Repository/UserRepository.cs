@@ -12,9 +12,17 @@ namespace Bank.Repository
             _context = context;
         }
 
+        public bool CreateUser(User user)
+        {
+            _context.Add(user);
+            _context.SaveChanges();
+            return true;
+        }
+
         public ICollection<User> GetUsers() 
         {
             return _context.Users.OrderBy(x => x.Id).ToList();
         }
+
     }
 }

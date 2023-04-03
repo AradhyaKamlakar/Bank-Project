@@ -16,7 +16,5 @@ namespace Bank.Model
         public int NoShowCount { get; set; }
         public DateTime TokenGenerationTime { get; set; }
         public int UserId { get; set; }
-        [ForeignKey("Id")]
-        public virtual User users { get; set; }
     }
 }

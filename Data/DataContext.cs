@@ -20,14 +20,6 @@ namespace Bank.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<Token>()
-                .HasOne(v => v.users)
-                .WithMany(v => v.Tokens)
-                .HasForeignKey(v => v.UserId);
-
-
-
             base.OnModelCreating(modelBuilder);
         }
     }

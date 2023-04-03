@@ -14,14 +14,17 @@ namespace Bank.Controllers
         {
             this._iuser = ur;
         }
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
-        public IActionResult GetAllUsers() 
+        [HttpPost]
+        public IActionResult CreateUser(User model)
         {
-            var users = _iuser.GetUsers();
-
-            return Ok(users);
+            if (_iuser.CreateUser(model))
+            {
+                return Ok("Sucess");
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
-
     }
 }
