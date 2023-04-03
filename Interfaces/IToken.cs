@@ -6,6 +6,6 @@ namespace Bank.Interfaces
     {
         ICollection<Token> GetTokens();
 
-        public bool CreateToken(Token token);
+        public bool CreateToken(int UserId, int ServiceId);
     }
 }
