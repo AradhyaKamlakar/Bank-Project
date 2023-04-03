@@ -1,5 +1,6 @@
 ﻿using Bank.Interfaces;
 using Bank.Model;
+using Bank.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank.Controllers
@@ -46,6 +47,52 @@ namespace Bank.Controllers
             // Return a 201 Created status code and the created model
            // return CreatedAtAction(nameof(CreateService), new { id = model.Id }, model);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Service updatedModel)
+        {
+            // Find the existing model in the database
+            var existingModel = _iservice.Getservices();
+
+            if (existingModel == null)
+            {
+                return NotFound();
+            }
+
+            // Update the existing model with the new data
+            foreach(var item in existingModel) 
+            {
+                if(item.Id == id) 
+                {
+                    item.ServiceName = updatedModel.ServiceName;
+                    item.ServiceTime = updatedModel.ServiceTime;
+                    _iservice.UpdateService(item);
+
+                }
+               
+            }
+            return Ok(existingModel);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            // Find the model to delete
+            var modelToDelete = _iservice.Getservices();
+            foreach(var item in modelToDelete) 
+            {
+                if(item.Id == id)
+                {
+                    if(item == null) return NotFound();
+
+                    else _iservice.DeleteService(item);
+                }
+            }
+
+            // Return a 204 No Content response
+            return NoContent();
+        }
+
 
     }
 }

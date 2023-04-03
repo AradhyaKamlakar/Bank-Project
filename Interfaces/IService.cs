@@ -6,5 +6,9 @@ namespace Bank.Interfaces
     {
         ICollection<Service> Getservices();
         public bool CreateService(Service service);
+
+        public bool UpdateService(Service service);
+
+        public bool DeleteService(Service service);
     }
 }

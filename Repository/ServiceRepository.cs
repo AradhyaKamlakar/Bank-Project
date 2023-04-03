@@ -30,6 +30,21 @@ namespace Bank.Repository
             return true;
         }
 
+        public bool UpdateService(Service service) 
+        {
+            
+            _context.Services.Update(service);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public bool DeleteService(Service service) 
+        {
+            _context.Services.Remove(service);
+            _context.SaveChanges();
+            return true;
+        }
+
          
     }
 }
