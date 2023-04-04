@@ -15,13 +15,13 @@ namespace Bank.Controllers
             _itoken = itoken;
         }
 
-        [HttpPut("{Serviced}")]
+        [HttpPut("route1")]
         public IActionResult ChangeStatusService(int tokenId)
         {
             return Ok(_itoken.ChangeStatusToServiced(tokenId));
         }
 
-        [HttpPut("{NoShow}")]
+        [HttpPut("route2")]
         public IActionResult ChangeStatusNoShow(int tokenId)
         {
             return Ok(_itoken.ChangeStatusToNoShowOrAbandoned(tokenId));

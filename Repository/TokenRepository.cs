@@ -3,6 +3,7 @@ using Bank.Data;
 using Bank.Interfaces;
 using Bank.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Bank.Repository
 {
@@ -17,11 +18,11 @@ namespace Bank.Repository
     public class TokenRepository: IToken
     {
         private readonly DataContext _context;
+        public static List<Token> tokenQueue = new List<Token>();
         public TokenRepository(DataContext context)
         {
             _context = context;
         }
-
 
         public bool CreateToken(int UserId, int ServiceId)
         {
@@ -42,7 +43,7 @@ namespace Bank.Repository
 
             Token token = new Token()
             {
-                TokenNumber = 32423,
+                TokenNumber = TokenNumberGenerator(),
                 ServiceName = serviceName,
                 Status = (int)Status.Pending,
                 WaitingTime = waitingTime,
@@ -50,8 +51,8 @@ namespace Bank.Repository
                 TokenGenerationTime = DateTime.Now,
                 UserId = UserId,
             };
+            AddToQueue(token);
             _context.Add(token);
-            CashAllListController.tokenQueue.Enqueue(token);
             _context.SaveChanges();
             return true;
             
@@ -64,6 +65,7 @@ namespace Bank.Repository
 
         public bool DeleteToken(Token token)
         {
+            tokenQueue.Remove(token);
             _context.Tokens.Remove(token);
             _context.SaveChanges();
             return true;
@@ -75,7 +77,7 @@ namespace Bank.Repository
             token.Status = (int)Status.Serviced;
             _context.Tokens.Update(token);
             _context.SaveChanges(); 
-
+            UpdateQueue();
             return(token);
         }
 
@@ -86,12 +88,14 @@ namespace Bank.Repository
             {
                 token.Status = (int)Status.NoShow;
                 token.NoShowCount++;
+                UpdateQueue();
                 _context.Tokens.Update(token);
                 _context.SaveChanges();
             }
             else
             {
                 token.Status = (int)Status.Abandoned;
+                UpdateQueue();
                 _context.Tokens.Update(token);
                 _context.SaveChanges();
             }
@@ -104,7 +108,6 @@ namespace Bank.Repository
 
             if (token.Status == (int)Status.Serviced || token.Status == (int)Status.Abandoned)
             {
-                CashAllListController.tokenQueue.Dequeue();
                 DeleteToken(token);
                 return(token);
             }
@@ -123,6 +126,49 @@ namespace Bank.Repository
                 }    
             }
             return null;
+        }
+
+        public List<Token> UpdateQueue()
+        {
+            tokenQueue.Clear();
+            var tokens = from token in _context.Tokens select token;
+            foreach (var token in tokens)
+            {
+                tokenQueue.Add(token);
+            }
+            return tokenQueue;
+        }
+      
+
+    public List<Token> AddToQueue(Token token)
+        {
+            if (tokenQueue.IsNullOrEmpty())
+            {
+                token.WaitingTime = 0;
+                tokenQueue.Add(token);
+                return tokenQueue.ToList();
+            }
+            else
+            {
+                tokenQueue.Add(token);
+                return tokenQueue.ToList();
+            }
+        }
+
+        public int TokenNumberGenerator()
+        {
+            tokenGen:
+            Random rnd = new Random();
+            int tokenNumber = rnd.Next(10000, 99999);
+            var tokens = from token in _context.Tokens select token;
+            foreach(var t in tokens)
+            {
+                if(t.TokenNumber == tokenNumber)
+                {
+                    goto tokenGen;
+                }
+            }
+            return tokenNumber;
         }
     }
 }
