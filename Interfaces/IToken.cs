@@ -7,5 +7,12 @@ namespace Bank.Interfaces
         ICollection<Token> GetTokens();
 
         public bool CreateToken(int UserId, int ServiceId);
+        public bool DeleteToken(Token token);
+
+        public Token ChangeStatusToServiced(int tokenId);
+
+        public Token ChangeStatusToNoShowOrAbandoned(int tokenId);
+        public Token DeleteT(int tokenId);
+        public Token GetToken(int tokenId);
     }
 }

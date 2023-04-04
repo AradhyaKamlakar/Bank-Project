@@ -18,9 +18,9 @@ namespace Bank.Controllers
         }
     
         [HttpPost]
-        public IActionResult CreateToken(Token token) 
+        public IActionResult CreateToken(int UserId, int ServiceId) 
         {
-            if (_itoken.CreateToken(token))
+            if (_itoken.CreateToken(UserId,ServiceId))
             {
                 return Ok("Sucess");
             }
