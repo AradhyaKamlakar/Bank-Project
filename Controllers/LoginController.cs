@@ -15,8 +15,8 @@ namespace Bank.Controllers
             _iuser = iuser;
         }
 
-        [HttpPost]
-       public IActionResult Login(User u)
+        [HttpPost("login")]
+       public IActionResult Login(UserSchema u)
         {
             var existingUser = _iuser.GetUsers();
 
@@ -29,7 +29,21 @@ namespace Bank.Controllers
             {
                 if(user.Name == u.Name && user.Password == u.Password ) 
                 {
-                    return Ok(user.Id);
+                    return Ok(user);
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost("getUser")]
+        public IActionResult GetUser( UserLoginSchema u)
+        {
+            var existingUser = _iuser.GetUsers();
+            foreach (var user in existingUser)
+            {
+                if (user.Id == u.id)
+                {
+                    return Ok(user);
                 }
             }
             return NotFound();

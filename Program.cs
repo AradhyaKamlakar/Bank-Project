@@ -20,6 +20,20 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.WithOrigins("*")
+                   .SetIsOriginAllowedToAllowWildcardSubdomains()
+                   .WithMethods("GET", "POST")
+                   .WithHeaders("Content-Type", "Authorization")
+                   .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
+        });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 
