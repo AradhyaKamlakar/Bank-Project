@@ -18,14 +18,12 @@ export const Body = () => {
     if(localStorage.getItem('user_auth') === null) {
       navigate('/login')
     }else{
-      // Api.user.getUser(JSON.parse(localStorage.getItem('user_auth'))).then((data)=>{
-      //   console.log(data);
-      //   if(data.status === 400) navigate('/login')
-      //   else{
-      //     setRootUser(data)
-      //     navigate('/')
-      //   }
-      // })
+      console.log(JSON.parse(localStorage.getItem('user_auth')));
+      Api.user.getUser(JSON.parse(localStorage.getItem('user_auth'))).then((data)=>{
+        console.log("under api",data);
+        setRootUser(data)
+        
+      })
 
     }
   }

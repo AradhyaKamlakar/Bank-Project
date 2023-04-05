@@ -22,16 +22,15 @@ const Register = () => {
         if(localStorage.getItem('user_auth') === null) {
           navigate('/register')
         }else{
-          Api.user.getUser({
-            Id : parseInt(JSON.parse(localStorage.getItem('user_auth')))
-          }).then((data)=>{
-            console.log(data);
-            if(data.status === 400) navigate('/register')
-            else{
-                setRootUser(data)
-                navigate('/')
-              }
-          })
+            Api.user.getUser(JSON.parse(localStorage.getItem('user_auth'))).then((data)=>{
+                console.log(data);
+                if(data.id){
+                  setRootUser(data);
+                  navigate('/')
+                }else{
+                  navigate('/register')
+                }
+              })
         }
       }
     

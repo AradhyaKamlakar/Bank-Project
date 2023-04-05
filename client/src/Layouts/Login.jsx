@@ -40,12 +40,13 @@ const Login = () => {
     if(localStorage.getItem('user_auth') === null) {
       navigate('/login')
     }else{
-      Api.user.getUser(parseInt(JSON.parse(localStorage.getItem('user_auth')))).then((data)=>{
+      Api.user.getUser(JSON.parse(localStorage.getItem('user_auth'))).then((data)=>{
         console.log(data);
-        if(data.status === 400) navigate('/login')
-        else{
-          setRootUser(data)
+        if(data.id){
+          setRootUser(data);
           navigate('/')
+        }else{
+          navigate('/login')
         }
       })
     }
