@@ -33,6 +33,7 @@ namespace Bank.Controllers
         [HttpDelete]
         public IActionResult Delete(int tokenId)
         {
+            ChangeStatusService(tokenId);
             return Ok(_itoken.DeleteT(tokenId));
         }
     }
