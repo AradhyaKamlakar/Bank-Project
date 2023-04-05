@@ -29,7 +29,6 @@ namespace Bank.Repository
             var services = from service in _context.Services select service;
           
             string serviceName = "";
-            int waitingTime = 0;
 
             
             foreach(var service in services)
@@ -37,22 +36,23 @@ namespace Bank.Repository
                 if(service.Id == ServiceId) 
                 {
                     serviceName = service.ServiceName;
-                    waitingTime = service.ServiceTime;
                 }
             }
+            //First Calculate waiting time required for new token
 
             Token token = new Token()
             {
                 TokenNumber = TokenNumberGenerator(),
                 ServiceName = serviceName,
                 Status = (int)Status.Pending,
-                WaitingTime = waitingTime,
+                WaitingTime = 0,
                 NoShowCount = 0,
                 TokenGenerationTime = DateTime.Now,
                 UserId = UserId,
             };
-            AddToQueue(token);
-            _context.Add(token);
+            tokenQueue.Add(token);
+            //WaitingTimeGenerator(tokenQueue);
+            _context.Tokens.Add(token);
             _context.SaveChanges();
             return true;
             
@@ -65,8 +65,10 @@ namespace Bank.Repository
 
         public bool DeleteToken(Token token)
         {
+            
             tokenQueue.Remove(token);
             _context.Tokens.Remove(token);
+            WaitingTimeGenerator(tokenQueue);
             _context.SaveChanges();
             return true;
         }
@@ -102,17 +104,15 @@ namespace Bank.Repository
             return (token);
         }
 
-        public Token DeleteT(int tokenId)
+        public void DeleteT(int tokenId)
         {
             Token token = GetToken(tokenId);
 
             if (token.Status == (int)Status.Serviced || token.Status == (int)Status.Abandoned)
             {
                 DeleteToken(token);
-                return(token);
+                
             }
-            
-            return (token);
         }
 
         public Token GetToken(int tokenId) 
@@ -169,6 +169,50 @@ namespace Bank.Repository
                 }
             }
             return tokenNumber;
+        }
+
+        public void WaitingTimeGenerator(List<Token> tokens)
+        {
+            var database_wala_token = from token in _context.Tokens select token;
+            var services = from service in _context.Services select service;
+            for(int i=0;i<tokens.Count;i++) 
+            {
+                if(i == 0)
+                {
+                    tokens[i].WaitingTime = 0;
+                }
+                else
+                {
+                    int serviceTime = 0;
+                    foreach(var t in services) 
+                    {
+                        if(t.ServiceName == tokens[i-1].ServiceName)
+                        {
+                            serviceTime = t.ServiceTime; 
+                            break;
+                        }
+                    }
+                    tokens[i].WaitingTime = ((i - 1)*5) + serviceTime + tokens[i-1].WaitingTime;
+                }
+            }
+            foreach(var t in database_wala_token)
+            {
+                for(int i = 0; i < tokens.Count; i++)
+                {
+                    if (tokens[i].TokenId == t.TokenId)
+                    {
+                        t.WaitingTime = tokens[i].WaitingTime;
+                        _context.Tokens.Update(t);
+                    }
+                }
+            }
+           
+            _context.SaveChanges();
+        }
+        
+        Token IToken.DeleteT(int tokenId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
