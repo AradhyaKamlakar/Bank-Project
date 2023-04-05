@@ -6,7 +6,7 @@ namespace Bank.Interfaces
     {
         ICollection<Token> GetTokens();
 
-        public bool CreateToken(int UserId, int ServiceId);
+        public Token CreateToken(int UserId, int ServiceId);
         public bool DeleteToken(Token token);
 
         public Token ChangeStatusToServiced(int tokenId);
@@ -14,6 +14,8 @@ namespace Bank.Interfaces
         public Token ChangeStatusToNoShowOrAbandoned(int tokenId);
         public Token DeleteT(int tokenId);
         public Token GetToken(int tokenId);
+
+        public Token GetTokenByUserId(int userId);
 
         public List<Token> AddToQueue(Token token);
         public List<Token> UpdateQueue();

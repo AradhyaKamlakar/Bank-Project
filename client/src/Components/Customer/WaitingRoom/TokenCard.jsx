@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TokenCard = () => {
+const TokenCard = ({token}) => {
   return (
     <div style={{
         backgroundColor:'white',
@@ -15,14 +15,14 @@ const TokenCard = () => {
         justifyContent:'space-evenly',
         boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px'
     }} >
-        <h1>12324</h1>
+        <h1>{token.tokenNumber}</h1>
         <div  style={{
            display:'flex',
            flexDirection:'column',
            alignItems:'center'
         }}>
-        <h3 className='mb_1' >Selected Service</h3>
-        <h3>Expected waiting time</h3>
+        <h3 className='mb_1' >{token.serviceName}</h3>
+        <h3>{token.waitingTime} min</h3>
         </div>
 
     </div>

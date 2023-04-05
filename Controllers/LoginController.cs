@@ -36,12 +36,12 @@ namespace Bank.Controllers
         }
 
         [HttpPost("getUser")]
-        public IActionResult GetUser( UserLoginSchema u)
+        public IActionResult GetUser(User u)
         {
             var existingUser = _iuser.GetUsers();
             foreach (var user in existingUser)
             {
-                if (user.Id == u.id)
+                if (user.Id == u.Id)
                 {
                     return Ok(user);
                 }

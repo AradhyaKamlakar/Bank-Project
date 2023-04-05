@@ -11,7 +11,7 @@ export const getRequest = async (route) => {
         })
 
         const data = await res.json()
-
+        console.log(data);
         return data;
 
 
@@ -37,6 +37,27 @@ export const postRequest = async (route, body = {}) => {
 
         const data = await res.json()
         console.log('under post request', data);
+        return data;
+
+
+    } catch (error) {
+        return {
+            error : error,
+        }
+    }
+}
+
+export const deleteRequest = async (route) => {
+    try {
+        
+        const res = await fetch(Proxy.Server_Proxy + route,{
+            method : 'DELETE',
+            headers : {
+                'Content-Type': 'application/json'
+            },
+        })
+
+        const data = await res.json()
         return data;
 
 

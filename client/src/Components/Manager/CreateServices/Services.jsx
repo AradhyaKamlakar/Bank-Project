@@ -36,20 +36,20 @@ const Services = () => {
 
 
     const [service, setService] = useState({
-        Id: '',
-        Name: '',
-        Time: '',
+        id: '',
+        serviceName: '',
+        serviceTime: '',
     })
 
     const AddService = async () => {
-        if (service.Id !== '') {
+        if (service.id !== '') {
 
             // to update the service
 
             await Api.service.updateService({
-                Id: service.Id,
-                Name: service.Name,
-                Time: parseInt(service.Time),
+                id : service.id,
+                serviceName: service.serviceName,
+                serviceTime: parseInt(service.serviceTime),
             })
             
             getData();
@@ -59,10 +59,11 @@ const Services = () => {
 
             // to add a new service
 
+            console.log(service);
+
             await Api.service.addService({
-                Id: service.Id,
-                Name: service.Name,
-                Time: parseInt(service.Time),
+                ServiceName: service.serviceName,
+                ServiceTime: parseInt(service.serviceTime),
             });
 
             getData();
@@ -71,9 +72,7 @@ const Services = () => {
 
     const deleteService = async (service) => {
 
-        await Api.service.deleteService({
-            Id: service.Id
-        })
+        await Api.service.deleteService(service.id)
 
         getData();
 

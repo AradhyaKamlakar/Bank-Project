@@ -36,7 +36,9 @@ export const Body = () => {
   return (
     <>
       {
-        rootUser.role === 'Customer' ? <Customer /> : <Manager />
+        rootUser.role === 'Customer' ? <Customer /> : 
+        rootUser.role === 'Manager' ? <Manager /> :
+        null
       }
     </>
   )

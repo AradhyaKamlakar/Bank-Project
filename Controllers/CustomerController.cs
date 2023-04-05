@@ -7,6 +7,7 @@ namespace Bank.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class CustomerController : Controller
     {
 
@@ -16,18 +17,28 @@ namespace Bank.Controllers
         {
             _itoken = itoken;
         }
-    
-        [HttpPost]
-        public IActionResult CreateToken(int UserId, int ServiceId) 
+
+        [HttpGet("create-token/{UserId}/{ServiceId}")]
+        public IActionResult CreateToken(int UserId, int ServiceId)
         {
-            if (_itoken.CreateToken(UserId,ServiceId))
+            Token t = _itoken.CreateToken(UserId, ServiceId);
+            if (Convert.ToBoolean(t))
             {
-                return Ok("Sucess");
+                return Ok(t);
             }
             else
             {
                 return BadRequest(ModelState);
             }
+        }
+
+
+        [HttpGet("find-token/{UserId}")]
+        public IActionResult FindToke (int UserId)
+        {
+            Token t = _itoken.GetTokenByUserId(UserId);
+
+            return Ok(t);
         }
 
 

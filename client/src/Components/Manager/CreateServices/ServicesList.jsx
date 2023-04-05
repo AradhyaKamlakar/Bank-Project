@@ -54,9 +54,9 @@ export default function ServicesList() {
                                         <div style={{ marginLeft: '1rem' }}>
 
                                             <h2>
-                                                {service.Name}
+                                                {service.serviceName}
                                             </h2>
-                                            <h3>{service.Time} min</h3>
+                                            <h3>{service.serviceTime} min</h3>
                                         </div>
                                     </div>
                                     <div>

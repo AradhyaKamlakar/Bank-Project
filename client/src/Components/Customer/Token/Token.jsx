@@ -1,15 +1,24 @@
 import { Button } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import MultipleSelect from './SelectServices'
+import { Api } from '../../../Utils/Api';
+import { AppContext } from '../../../App';
 
 const Token = () => {
 
   const [selectedService, setSelectedService] = useState("");
 
+  const {rootUser} = useContext(AppContext)
+
   const navigate = useNavigate();
 
-  const gotoWaitingRoom = () =>{
+  const gotoWaitingRoom = async () =>{
+
+    Api.token.createToken(rootUser.id, selectedService).then((data)=>{
+      console.log(data);
+    })
+
     navigate('/waiting-room')
   }
 

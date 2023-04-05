@@ -28,7 +28,7 @@ namespace Bank.Controllers
             return Ok(services);
         }
 
-        [HttpPost]
+        [HttpPost("create-service")]
         public IActionResult CreateService(Service model)
         {
             // Do some validation on the incoming model
@@ -48,8 +48,8 @@ namespace Bank.Controllers
            // return CreatedAtAction(nameof(CreateService), new { id = model.Id }, model);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Service updatedModel)
+        [HttpPost("update-service")]
+        public IActionResult Update(Service updatedModel)
         {
             // Find the existing model in the database
             var existingModel = _iservice.Getservices();
@@ -62,7 +62,7 @@ namespace Bank.Controllers
             // Update the existing model with the new data
             foreach(var item in existingModel) 
             {
-                if(item.Id == id) 
+                if(item.Id == updatedModel.Id) 
                 {
                     item.ServiceName = updatedModel.ServiceName;
                     item.ServiceTime = updatedModel.ServiceTime;

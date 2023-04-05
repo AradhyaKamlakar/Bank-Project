@@ -1,4 +1,4 @@
-import { getRequest, postRequest } from "./Methods";
+import { deleteRequest, getRequest, postRequest } from "./Methods";
 
 class User {
   Register(body) {
@@ -21,19 +21,32 @@ class Service {
   }
 
   addService(body) {
-    return postRequest("/manager/addService", body);
+    return postRequest("/Manager/create-service", body);
   }
 
   updateService(body) {
-    return postRequest("/manager/updateService", body);
+    return postRequest("/Manager/update-service", body);
   }
 
-  deleteService(body) {
-    return postRequest("/manager/deleteService", body);
+  deleteService(id) {
+    return deleteRequest(`/Manager/${id}`);
   }
+}
+
+class Token {
+
+  createToken(userId, serviceId){
+    return getRequest(`/Customer/create-token/${userId}/${serviceId}`)
+  }
+
+  getTokenByUserId(id) {
+    return getRequest(`/Customer/find-token/${id}`);
+  }
+
 }
 
 export const Api = {
   user: new User(),
   service: new Service(),
+  token : new Token(),
 };

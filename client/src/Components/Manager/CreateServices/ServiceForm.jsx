@@ -5,14 +5,14 @@ import TextField from '@mui/material/TextField';
 import { ServicesContext } from './Services';
 import { type } from '@testing-library/user-event/dist/type';
 
-const ServiceForm = ({ serviceName, setServiceName }) => {
+const ServiceForm = () => {
 
   const { AddService, service, setService } = React.useContext(ServicesContext)
 
   const handleChange = (val) => {
     setService({
       ...service,
-      'Name': val
+      'serviceName': val
     });
   }
 
@@ -25,7 +25,7 @@ const ServiceForm = ({ serviceName, setServiceName }) => {
     if(val === ''){
       setService({
         ...service,
-        'Time': ''
+        'serviceTime': ''
       });
       return;
     }
@@ -34,7 +34,7 @@ const ServiceForm = ({ serviceName, setServiceName }) => {
 
       setService({
         ...service,
-        'Time': parseInt(val)
+        'serviceTime': parseInt(val)
       });
     }
   }
@@ -42,11 +42,11 @@ const ServiceForm = ({ serviceName, setServiceName }) => {
 
   return (
     <div>
-      <TextField id="standard-basic" value={service.Name} onChange={(e) => handleChange(e.target.value)} label="Service Name" variant="standard" style={{
+      <TextField id="standard-basic" value={service.serviceName} onChange={(e) => handleChange(e.target.value)} label="Service Name" variant="standard" style={{
         width: '100%',
         marginBottom: '1rem'
       }} />
-      <TextField id="standard-basic" value={service.Time} onChange={(e) => timeChange(e.target.value)} label="Service Time(in minutes)" variant="standard" style={{
+      <TextField id="standard-basic" value={service.serviceTime} onChange={(e) => timeChange(e.target.value)} label="Service Time(in minutes)" variant="standard" style={{
         width: '100%'
       }} />
     </div>

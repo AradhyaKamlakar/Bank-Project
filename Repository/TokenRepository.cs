@@ -24,7 +24,7 @@ namespace Bank.Repository
             _context = context;
         }
 
-        public bool CreateToken(int UserId, int ServiceId)
+        public Token CreateToken(int UserId, int ServiceId)
         {
             var services = from service in _context.Services select service;
           
@@ -54,7 +54,7 @@ namespace Bank.Repository
             //WaitingTimeGenerator(tokenQueue);
             _context.Tokens.Add(token);
             _context.SaveChanges();
-            return true;
+            return token;
             
         }
 
@@ -124,6 +124,19 @@ namespace Bank.Repository
                 {
                     return t;
                 }    
+            }
+            return null;
+        }
+
+        public Token GetTokenByUserId(int userId)
+        {
+            var tokens = from token in _context.Tokens select token;
+            foreach (var t in tokens)
+            {
+                if (t.UserId == userId)
+                {
+                    return t;
+                }
             }
             return null;
         }

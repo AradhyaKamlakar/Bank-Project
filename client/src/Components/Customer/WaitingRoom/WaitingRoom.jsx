@@ -7,6 +7,8 @@ import TokenCard from './TokenCard';
 import { Button } from '@mui/material';
 import WaitingCustomers from './WaittingCustomers';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../App';
+import { Api } from '../../../Utils/Api';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -21,16 +23,44 @@ export default function WaitingRoom() {
 
   const navigate = useNavigate()
 
+  const {rootUser } = React.useContext(AppContext)
+
   const gotoTimeline = () =>{
     navigate('/customer-timeline')
   }
+
+  const [token, setToken] = React.useState({})
+
+  const getToken = async () => {
+    try {
+      
+      Api.token.getTokenByUserId(rootUser.id).then((data)=>{
+        if(data.tokenId){
+          console.log('token found');
+          setToken(data)
+        }else{
+          navigate('/')
+        }
+      })
+
+    } catch (error) {
+      
+    }
+  }
+
+  React.useEffect(() => {
+
+    getToken();
+
+  }, [])
+  
 
   return (
     <>
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         <Grid item xs={12} sm={12} md={4}>
-          <TokenCard />
+          <TokenCard token={token} />
         </Grid>
         <Grid item xs={12} sm={12} md={8}>
           <div style={{

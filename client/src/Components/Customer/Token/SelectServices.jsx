@@ -92,11 +92,11 @@ export default function MultipleSelect({ setSelectedService }) {
         >
           {services.map((service) => (
             <MenuItem
-              key={service.Id}
-              value={service.Id}
-              style={getStyles(service.Id, services, theme)}
+              key={service.id}
+              value={service.id}
+              style={getStyles(service.id, services, theme)}
             >
-              {service.Name}
+              {service.serviceName}
             </MenuItem>
           ))}
         </Select>
