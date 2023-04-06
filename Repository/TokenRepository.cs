@@ -99,6 +99,7 @@ namespace Bank.Repository
             Token token = GetToken(tokenId);
             token.Status = (int)Status.Serviced;
             _context.Tokens.Update(token);
+            DeleteT(tokenId);
             _context.SaveChanges(); 
             UpdateQueue();
             return(token);
@@ -153,10 +154,6 @@ namespace Bank.Repository
                 
             }
         }
-
-        
-
-        
 
         public List<Token> UpdateQueue()
         {
@@ -240,6 +237,47 @@ namespace Bank.Repository
             _context.SaveChanges();
         }
         
+        public void WaitingTimeAfterNoShow()
+        {
+            var tokens = _context.Tokens;   
+            var noShowCountToken = _context.Tokens.FirstOrDefault();
+            var newrows = from t in _context.Tokens.Skip(1) select t;
+            List<Token> list2 = new List<Token>();
+            foreach(var t in newrows)
+            {
+                list2.Add(t);
+            }
+            WaitingTimeGenerator(list2);
+            foreach (var t in tokens)
+            {
+                for (int i = 0; i < list2.Count; i++)
+                {
+                    if(i == 0)
+                    {
+                        continue;
+                    }
+                    else if (list2[i].TokenId == t.TokenId)
+                    {
+                        t.WaitingTime = list2[i].WaitingTime;
+                        _context.Tokens.Update(t);
+                    }
+                }
+            }
+            int time = 0;
+            var servicvetime = from ser in _context.Services select ser;
+            foreach (var t in servicvetime)
+            {
+                if(t.ServiceName == list2[list2.Count- 1].ServiceName) 
+                {
+                    time = t.ServiceTime; break;
+                }
+            }
+            noShowCountToken.WaitingTime = list2[list2.Count- 1].WaitingTime + time;
+            _context.Tokens.Update(noShowCountToken);
+
+            UpdateQueue();
+            _context.SaveChanges();
+        }
         
     }
 }
