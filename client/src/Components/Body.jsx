@@ -4,6 +4,7 @@ import { AppContext } from '../App'
 import Customer from '../Layouts/Customer'
 import Manager from '../Layouts/Manager'
 import { Api } from '../Utils/Api'
+import Counter from '../Layouts/Counter'
 
 
 
@@ -38,7 +39,7 @@ export const Body = () => {
       {
         rootUser.role === 'Customer' ? <Customer /> : 
         rootUser.role === 'Manager' ? <Manager /> :
-        null
+        <Counter />
       }
     </>
   )

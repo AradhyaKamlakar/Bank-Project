@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Api } from '../../../Utils/Api';
+import { AppContext } from '../../../App';
 
 const ITEM_HEIGHT = 50;
 const ITEM_PADDING_TOP = 8;
@@ -45,6 +46,9 @@ export default function MultipleSelect({ setSelectedService }) {
   const [personName, setPersonName] = React.useState([]);
 
   const [services, setServices] = React.useState([])
+
+  const {rootUser} = React.useContext(AppContext)
+
 
   const getServices = async () => {
 

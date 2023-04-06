@@ -23,28 +23,30 @@ export default function WaitingRoom() {
 
   const navigate = useNavigate()
 
-  const {rootUser } = React.useContext(AppContext)
+  const { rootUser } = React.useContext(AppContext)
 
-  const gotoTimeline = () =>{
+  const gotoTimeline = () => {
     navigate('/customer-timeline')
   }
 
   const [token, setToken] = React.useState({})
 
+  const [managerToken, setManagerToken] = React.useState('#####')
+
   const getToken = async () => {
     try {
-      
-      Api.token.getTokenByUserId(rootUser.id).then((data)=>{
-        if(data.tokenId){
+
+      Api.token.getTokenByUserId(rootUser.id).then((data) => {
+        if (data.tokenId) {
           console.log('token found');
           setToken(data)
-        }else{
+        } else {
           navigate('/')
         }
       })
 
     } catch (error) {
-      
+
     }
   }
 
@@ -53,42 +55,45 @@ export default function WaitingRoom() {
     getToken();
 
   }, [])
-  
+
 
   return (
     <>
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        <Grid item xs={12} sm={12} md={4}>
-          <TokenCard token={token} />
-        </Grid>
-        <Grid item xs={12} sm={12} md={8}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '1rem',
-            boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-            borderRadius: '5px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '200px',
-            boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px'
-          }} >
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          <Grid item xs={12} sm={12} md={4}>
+            <TokenCard token={token} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={8}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '1rem',
+              boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+              borderRadius: '5px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '200px',
+              boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px'
+            }} >
               <div style={{
-                fontWeight:'bold',
-                fontSize:'100px'
+                fontWeight: 'bold',
+                fontSize: '100px'
               }} >
-                1234
+                {managerToken}
               </div>
-              <Button variant='contained' onClick={gotoTimeline}>
-                Go to Manager
-              </Button>
-          </div>
+              {
+                token.tokenNumber === managerToken &&
+                <Button variant='contained' onClick={gotoTimeline}>
+                  Go to Manager
+                </Button>
+              }
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
-    <WaitingCustomers />
+      </Box>
+      <WaitingCustomers />
     </>
   );
 }
