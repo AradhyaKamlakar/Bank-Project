@@ -12,12 +12,12 @@ namespace Bank.Interfaces
         public Token ChangeStatusToServiced(int tokenId);
 
         public Token ChangeStatusToNoShowOrAbandoned(int tokenId);
-        public Token DeleteT(int tokenId);
+        public void DeleteT(int tokenId);
         public Token GetToken(int tokenId);
 
         public Token GetTokenByUserId(int userId);
 
-        public List<Token> AddToQueue(Token token);
+       // public List<Token> AddToQueue(Token token);
         public List<Token> UpdateQueue();
 
         public int TokenNumberGenerator();

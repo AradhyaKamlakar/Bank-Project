@@ -24,6 +24,7 @@ namespace Bank.Repository
             _context = context;
         }
 
+        //This function creates the token for the user and add it to the list.
         public Token CreateToken(int UserId, int ServiceId)
         {
             var services = from service in _context.Services select service;
@@ -63,67 +64,15 @@ namespace Bank.Repository
             return _context.Tokens.OrderBy(p => p.TokenId).ToList();
         }
 
-        public bool DeleteToken(Token token)
-        {
-            
-            tokenQueue.Remove(token);
-            _context.Tokens.Remove(token);
-            WaitingTimeGenerator(tokenQueue);
-            _context.SaveChanges();
-            return true;
-        }
-
-        public Token ChangeStatusToServiced(int tokenId)
-        {
-            Token token = GetToken(tokenId);
-            token.Status = (int)Status.Serviced;
-            _context.Tokens.Update(token);
-            _context.SaveChanges(); 
-            UpdateQueue();
-            return(token);
-        }
-
-        public Token ChangeStatusToNoShowOrAbandoned(int tokenId)
-        {
-            Token token = GetToken(tokenId);
-            if (token.NoShowCount < 3)
-            {
-                token.Status = (int)Status.NoShow;
-                token.NoShowCount++;
-                UpdateQueue();
-                _context.Tokens.Update(token);
-                _context.SaveChanges();
-            }
-            else
-            {
-                token.Status = (int)Status.Abandoned;
-                UpdateQueue();
-                _context.Tokens.Update(token);
-                _context.SaveChanges();
-            }
-            return (token);
-        }
-
-        public void DeleteT(int tokenId)
-        {
-            Token token = GetToken(tokenId);
-
-            if (token.Status == (int)Status.Serviced || token.Status == (int)Status.Abandoned)
-            {
-                DeleteToken(token);
-                
-            }
-        }
-
-        public Token GetToken(int tokenId) 
+        public Token GetToken(int tokenId)
         {
             var tokens = from token in _context.Tokens select token;
-            foreach(var t in tokens)
+            foreach (var t in tokens)
             {
                 if (t.TokenId == tokenId)
                 {
                     return t;
-                }    
+                }
             }
             return null;
         }
@@ -141,6 +90,71 @@ namespace Bank.Repository
             return null;
         }
 
+
+        public Token ChangeStatusToServiced(int tokenId)
+        {
+            Token token = GetToken(tokenId);
+            token.Status = (int)Status.Serviced;
+            _context.Tokens.Update(token);
+            _context.SaveChanges(); 
+            UpdateQueue();
+            return(token);
+        }
+
+        public Token ChangeStatusToNoShowOrAbandoned(int tokenId)
+        {
+           // Token token = GetToken(tokenId);
+            var tokens = from t in _context.Tokens select t;
+            foreach (var t in tokens)
+            {
+                if(t.TokenId == tokenId)
+                {
+                    if(t.NoShowCount < 3)
+                    {
+                        t.Status = (int)Status.NoShow;
+                        t.NoShowCount++;
+                        _context.Tokens.Update(t);
+                        _context.SaveChanges();
+                        return(t);
+                    }
+                    else
+                    {
+                        t.Status = (int)Status.Abandoned;
+                        _context.Tokens.Update(t);
+                        DeleteT(tokenId);
+                        _context.SaveChanges();
+                        return null;
+                    }
+                }
+            }
+            return null;
+            
+        }
+        public bool DeleteToken(Token token)
+        {
+
+            tokenQueue.Remove(token);
+            _context.Tokens.Remove(token);
+            WaitingTimeGenerator(tokenQueue);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public void DeleteT(int tokenId)
+        {
+            Token token = GetToken(tokenId);
+
+            if (token.Status == (int)Status.Serviced || token.Status == (int)Status.Abandoned)
+            {
+                DeleteToken(token);
+                
+            }
+        }
+
+        
+
+        
+
         public List<Token> UpdateQueue()
         {
             tokenQueue.Clear();
@@ -153,20 +167,20 @@ namespace Bank.Repository
         }
       
 
-    public List<Token> AddToQueue(Token token)
-        {
-            if (tokenQueue.IsNullOrEmpty())
-            {
-                token.WaitingTime = 0;
-                tokenQueue.Add(token);
-                return tokenQueue.ToList();
-            }
-            else
-            {
-                tokenQueue.Add(token);
-                return tokenQueue.ToList();
-            }
-        }
+    //public List<Token> AddToQueue(Token token)
+    //    {
+    //        if (tokenQueue.IsNullOrEmpty())
+    //        {
+    //            token.WaitingTime = 0;
+    //            tokenQueue.Add(token);
+    //            return tokenQueue.ToList();
+    //        }
+    //        else
+    //        {
+    //            tokenQueue.Add(token);
+    //            return tokenQueue.ToList();
+    //        }
+    //    }
 
         public int TokenNumberGenerator()
         {
@@ -205,7 +219,7 @@ namespace Bank.Repository
                             break;
                         }
                     }
-                    tokens[i].WaitingTime = ((i - 1)*5) + serviceTime + tokens[i-1].WaitingTime;
+                    tokens[i].WaitingTime = serviceTime + tokens[i-1].WaitingTime;
                 }
             }
             foreach(var t in database_wala_token)
@@ -223,9 +237,6 @@ namespace Bank.Repository
             _context.SaveChanges();
         }
         
-        Token IToken.DeleteT(int tokenId)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

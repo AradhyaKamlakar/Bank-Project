@@ -1,6 +1,7 @@
 ﻿using Bank.Data;
 using Bank.Interfaces;
 using Bank.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Repository
 {
@@ -14,7 +15,7 @@ namespace Bank.Repository
 
         public ICollection<Service> Getservices()
         {
-            return _context.Services.OrderBy(x => x.Id).ToList();
+            return  _context.Services.OrderBy(x => x.Id).ToList();
         }
 
         public bool CreateService(Service service)
