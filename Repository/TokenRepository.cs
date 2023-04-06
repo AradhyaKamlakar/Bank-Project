@@ -31,22 +31,25 @@ namespace Bank.Repository
           
             string serviceName = "";
 
-            
+            int serviceTime = 0;
+
             foreach(var service in services)
             {
                 if(service.Id == ServiceId) 
                 {
                     serviceName = service.ServiceName;
+                    serviceTime = service.ServiceTime;
                 }
             }
-            //First Calculate waiting time required for new token
 
+            //First Calculate waiting time required for new token
+            int waitingTime = tokenQueue[tokenQueue.Count - 1].WaitingTime + serviceTime;
             Token token = new Token()
             {
                 TokenNumber = TokenNumberGenerator(),
                 ServiceName = serviceName,
                 Status = (int)Status.Pending,
-                WaitingTime = 0,
+                WaitingTime = waitingTime,
                 NoShowCount = 0,
                 TokenGenerationTime = DateTime.Now,
                 UserId = UserId,
