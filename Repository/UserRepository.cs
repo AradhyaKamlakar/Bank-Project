@@ -19,6 +19,11 @@ namespace Bank.Repository
             return true;
         }
 
+        public User GetUserById(int id)
+        {
+            return _context.Users.SingleOrDefault(u => u.Id == id);
+        }
+
         public ICollection<User> GetUsers() 
         {
             return _context.Users.OrderBy(x => x.Id).ToList();

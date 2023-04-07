@@ -12,6 +12,9 @@ class User {
     return postRequest('/Login/getUser',body);
   }
 
+  getUserById(id){
+    return getRequest(`/Login/get-user-by-id/${id}`)
+  }
 
 }
 
@@ -43,10 +46,39 @@ class Token {
     return getRequest(`/Customer/find-token/${id}`);
   }
 
+  getAllTokens(){
+    return getRequest(`/Manager/get-all-tokens`);
+  }
+
+  setCurrentToken(token) {
+    return postRequest('/Manager/set-current-token', token);
+  }
+
+  getCurrentToken(){
+    return getRequest(`/Customer/get-current-token`);
+  }
+
+  setCurrentUserToken(token){
+    return postRequest('/Customer/set-current-token', token);
+  }
+
+  getCurrentUserToken(){
+    return getRequest('/Counter/get-current-user-token');
+  }
+
+}
+
+class Counter {
+
+  setNoShowStatus(id){
+    return getRequest(`/Counter/no-show/${id}`);
+  }
+
 }
 
 export const Api = {
   user: new User(),
   service: new Service(),
   token : new Token(),
+  counter : new Counter()
 };

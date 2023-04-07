@@ -38,7 +38,6 @@ export default function WaitingRoom() {
 
       Api.token.getTokenByUserId(rootUser.id).then((data) => {
         if (data.tokenId) {
-          console.log('token found');
           setToken(data)
         } else {
           navigate('/')
@@ -50,9 +49,28 @@ export default function WaitingRoom() {
     }
   }
 
+
+  const getCurrentToken = () => {
+    try {
+      
+      Api.token.getCurrentToken().then((data)=>{
+        setManagerToken(data);
+      })
+
+    } catch (error) {
+      
+    }
+  }
+
   React.useEffect(() => {
 
-    getToken();
+    const interval = setInterval(() => {
+      getToken();
+      getCurrentToken();
+
+    }, 3000);
+
+    return () => clearInterval(interval);
 
   }, [])
 
@@ -81,10 +99,10 @@ export default function WaitingRoom() {
                 fontWeight: 'bold',
                 fontSize: '100px'
               }} >
-                {managerToken}
+                {managerToken.tokenNumber}
               </div>
               {
-                token.tokenNumber === managerToken &&
+                token.tokenNumber === managerToken.tokenNumber &&
                 <Button variant='contained' onClick={gotoTimeline}>
                   Go to Manager
                 </Button>
@@ -93,7 +111,7 @@ export default function WaitingRoom() {
           </Grid>
         </Grid>
       </Box>
-      <WaitingCustomers />
+      <WaitingCustomers token={token} />
     </>
   );
 }

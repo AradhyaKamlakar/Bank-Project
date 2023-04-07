@@ -6,5 +6,7 @@ namespace Bank.Interfaces
     {
         ICollection<User> GetUsers();
         public bool CreateUser(User user);
+
+        public User GetUserById(int id);
     }
 }

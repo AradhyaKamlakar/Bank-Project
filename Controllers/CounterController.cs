@@ -21,10 +21,16 @@ namespace Bank.Controllers
             return Ok(_itoken.ChangeStatusToServiced(tokenId));
         }
 
-        [HttpPut("no-show")]
+        [HttpGet("no-show/{tokenId}")]
         public IActionResult ChangeStatusNoShow(int tokenId)
         {
             return Ok(_itoken.ChangeStatusToNoShowOrAbandoned(tokenId));
+        }
+
+        [HttpGet("get-current-user-token")]
+        public IActionResult GetCurrentUserToken()
+        {
+            return Ok(_itoken.GetCurrentUserToken());
         }
     }
 }

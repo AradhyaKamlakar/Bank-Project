@@ -41,6 +41,18 @@ namespace Bank.Controllers
             return Ok(t);
         }
 
+        [HttpGet("get-current-token")]
+        public IActionResult GetCurrentToken()
+        {
+            return Ok(_itoken.GetCurrentToken());
+        }
+
+        [HttpPost("set-current-token")]
+        public IActionResult SetCurrentUserToken(Token t)
+        {
+            _itoken.SetCurrentUserToken(t);
+            return Ok("current user token set");
+        }
 
     }
 }

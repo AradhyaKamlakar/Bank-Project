@@ -19,53 +19,123 @@ namespace Bank.Repository
     {
         private readonly DataContext _context;
         public static List<Token> tokenQueue = new List<Token>();
+        public static Token CurrentToken = new Token();
+        public static Token CurrentUserToken = new Token();
         public TokenRepository(DataContext context)
         {
             _context = context;
+            UpdateQueue();
         }
 
         //This function creates the token for the user and add it to the list.
         public Token CreateToken(int UserId, int ServiceId)
         {
+
             var services = from service in _context.Services select service;
-          
-            string serviceName = "";
-
-            int serviceTime = 0;
-
-            foreach(var service in services)
+            var serviceName = "";
+            foreach (var service in services)
             {
-                if(service.Id == ServiceId) 
+                if(service.Id == ServiceId)
                 {
                     serviceName = service.ServiceName;
-                    serviceTime = service.ServiceTime;
+                    break;
                 }
             }
 
-            //First Calculate waiting time required for new token
-            int waitingTime = tokenQueue[tokenQueue.Count - 1].WaitingTime + serviceTime;
-            Token token = new Token()
+            var waitingTime = 0;
+
+            if(tokenQueue.Count != 0)
             {
+                var serviceTime = 0;
+
+                foreach (var service in services)
+                {
+                    if (service.ServiceName == tokenQueue[tokenQueue.Count -1].ServiceName)
+                    {
+                        serviceTime = service.ServiceTime;
+                        break;
+                    }
+                }
+                waitingTime = tokenQueue[tokenQueue.Count - 1].WaitingTime + serviceTime;
+            }
+
+            Token token = new Token() {
                 TokenNumber = TokenNumberGenerator(),
+                UserId = UserId,
                 ServiceName = serviceName,
                 Status = (int)Status.Pending,
                 WaitingTime = waitingTime,
                 NoShowCount = 0,
                 TokenGenerationTime = DateTime.Now,
-                UserId = UserId,
             };
+
             tokenQueue.Add(token);
-            //WaitingTimeGenerator(tokenQueue);
             _context.Tokens.Add(token);
             _context.SaveChanges();
+
             return token;
+
+            //var services = from service in _context.Services select service;
+          
+            //string serviceName = "";
+
+            //int serviceTime = 0;
+
+            //foreach(var service in services)
+            //{
+            //    if(service.Id == ServiceId) 
+            //    {
+            //        serviceName = service.ServiceName;
+            //        serviceTime = service.ServiceTime;
+            //    }
+            //}
+
+            ////First Calculate waiting time required for new token
+            //int waitingTime = tokenQueue[tokenQueue.Count - 1].WaitingTime + serviceTime;
+            //Token token = new Token()
+            //{
+            //    TokenNumber = TokenNumberGenerator(),
+            //    ServiceName = serviceName,
+            //    Status = (int)Status.Pending,
+            //    WaitingTime = waitingTime,
+            //    NoShowCount = 0,
+            //    TokenGenerationTime = DateTime.Now,
+            //    UserId = UserId,
+            //};
+            //tokenQueue.Add(token);
+            ////WaitingTimeGenerator(tokenQueue);
+            //_context.Tokens.Add(token);
+            //_context.SaveChanges();
+            //return token;
             
         }
 
         public ICollection<Token> GetTokens()
         {
-            return _context.Tokens.OrderBy(p => p.TokenId).ToList();
+            List<Token> tokens = tokenQueue.ToList();
+            return tokenQueue.ToList();
         }
+
+        public void SetCurrentToken(Token t)
+        {
+            CurrentToken = t;
+        }
+
+        public Token GetCurrentToken() {
+            return CurrentToken;
+        }
+
+
+        public void SetCurrentUserToken(Token t)
+        {
+            CurrentUserToken = t;
+        }
+
+        public Token GetCurrentUserToken()
+        {
+            return CurrentUserToken;
+        }
+
 
         public Token GetToken(int tokenId)
         {
@@ -108,38 +178,97 @@ namespace Bank.Repository
         public Token ChangeStatusToNoShowOrAbandoned(int tokenId)
         {
            // Token token = GetToken(tokenId);
-            var tokens = from t in _context.Tokens select t;
-            foreach (var t in tokens)
+            var tokens = _context.Tokens;
+
+            Token token = _context.Tokens.SingleOrDefault((t) => t.TokenId == tokenId);
+            if(token.Status == (int)Status.Pending)
             {
-                if(t.TokenId == tokenId)
-                {
-                    if(t.NoShowCount < 3)
-                    {
-                        t.Status = (int)Status.NoShow;
-                        t.NoShowCount++;
-                        _context.Tokens.Update(t);
-                        _context.SaveChanges();
-                        return(t);
-                    }
-                    else
-                    {
-                        t.Status = (int)Status.Abandoned;
-                        _context.Tokens.Update(t);
-                        DeleteT(tokenId);
-                        _context.SaveChanges();
-                        return null;
-                    }
-                }
+                token.Status = (int)Status.NoShow;
+                token.NoShowCount += 1;
+                
             }
-            return null;
+
+            else if(token.Status == (int)Status.NoShow && token.NoShowCount < 3)
+            {
+                token.NoShowCount += 1;
+            }
+
+            else
+            {
+                token.Status = (int)Status.Abandoned;
+            }
+
+
+            tokenQueue.RemoveAt(0);
+            if(tokenQueue.Count == 0)
+            {
+                tokenQueue.Add(token);
+            }
+            else
+            {
+                RearrangeTokenQueue();
+                Service service = _context.Services.SingleOrDefault((ser) => ser.ServiceName == tokenQueue[tokenQueue.Count - 1].ServiceName);
+                int serviceTime = service.ServiceTime;
+                token.WaitingTime = serviceTime + tokenQueue[tokenQueue.Count - 1].WaitingTime;
+                tokenQueue.Add(token);
+            }
+
+
+            CurrentToken = token;
+            _context.Tokens.Update(token);
+            _context.SaveChanges();
+
+            return token;
             
         }
+
+        public void RearrangeTokenQueue()
+        {
+            for(int i = 0; i < tokenQueue.Count; i++)
+            {
+                if(i == 0)
+                {
+                    tokenQueue[i].WaitingTime = 0;
+                }
+                else
+                {
+                    Service service = _context.Services.SingleOrDefault((ser) => ser.ServiceName == tokenQueue[i -1].ServiceName);
+                    int serviceTime = service.ServiceTime;
+                    tokenQueue[i].WaitingTime = serviceTime + tokenQueue[i-1].WaitingTime;
+                }
+            }
+
+        }
+
+
+        public void AddLast()
+        {
+            Token first = tokenQueue[0];
+            tokenQueue.RemoveAt(0);
+            WaitingTimeGenerator();
+            var services = _context.Services;
+            var serviceTime = 0;
+            foreach (var ser in services)
+            {
+                if (ser.ServiceName == tokenQueue[tokenQueue.Count - 1].ServiceName)
+                {
+                    serviceTime = ser.ServiceTime;
+                    break;
+                }
+            }
+            first.WaitingTime = tokenQueue[tokenQueue.Count - 1].WaitingTime + serviceTime;
+            _context.Tokens.Update(first);
+            _context.SaveChanges();
+
+            tokenQueue.Add(first);
+        }
+
         public bool DeleteToken(Token token)
         {
 
             tokenQueue.Remove(token);
             _context.Tokens.Remove(token);
-            WaitingTimeGenerator(tokenQueue);
+            WaitingTimeGenerator();
             _context.SaveChanges();
             return true;
         }
@@ -158,7 +287,9 @@ namespace Bank.Repository
         public List<Token> UpdateQueue()
         {
             tokenQueue.Clear();
-            var tokens = from token in _context.Tokens select token;
+            var tokens = from token in _context.Tokens 
+                         orderby token.WaitingTime
+                         select token;
             foreach (var token in tokens)
             {
                 tokenQueue.Add(token);
@@ -198,37 +329,38 @@ namespace Bank.Repository
             return tokenNumber;
         }
 
-        public void WaitingTimeGenerator(List<Token> tokens)
+        public void WaitingTimeGenerator()
         {
+
             var database_wala_token = from token in _context.Tokens select token;
             var services = from service in _context.Services select service;
-            for(int i=0;i<tokens.Count;i++) 
+            for(int i=0;i<tokenQueue.Count;i++) 
             {
                 if(i == 0)
                 {
-                    tokens[i].WaitingTime = 0;
+                    tokenQueue[i].WaitingTime = 0;
                 }
                 else
                 {
                     int serviceTime = 0;
-                    foreach(var t in services) 
+                    foreach(var ser in services) 
                     {
-                        if(t.ServiceName == tokens[i-1].ServiceName)
+                        if(ser.ServiceName == tokenQueue[i-1].ServiceName)
                         {
-                            serviceTime = t.ServiceTime; 
+                            serviceTime = ser.ServiceTime; 
                             break;
                         }
                     }
-                    tokens[i].WaitingTime = serviceTime + tokens[i-1].WaitingTime;
+                    tokenQueue[i].WaitingTime = serviceTime + tokenQueue[i-1].WaitingTime;
                 }
             }
             foreach(var t in database_wala_token)
             {
-                for(int i = 0; i < tokens.Count; i++)
+                for(int i = 0; i < tokenQueue.Count; i++)
                 {
-                    if (tokens[i].TokenId == t.TokenId)
+                    if (tokenQueue[i].TokenId == t.TokenId)
                     {
-                        t.WaitingTime = tokens[i].WaitingTime;
+                        t.WaitingTime = tokenQueue[i].WaitingTime;
                         _context.Tokens.Update(t);
                     }
                 }
@@ -247,7 +379,7 @@ namespace Bank.Repository
             {
                 list2.Add(t);
             }
-            WaitingTimeGenerator(list2);
+            WaitingTimeGenerator();
             foreach (var t in tokens)
             {
                 for (int i = 0; i < list2.Count; i++)
@@ -278,6 +410,7 @@ namespace Bank.Repository
             UpdateQueue();
             _context.SaveChanges();
         }
+
         
     }
 }

@@ -1,6 +1,24 @@
 import React from 'react'
 
 const TokenCard = ({token}) => {
+
+  
+
+  const getStatus = (id) => {
+    switch  (id) {
+        case 0:
+            return "Pending";
+        case 1:
+            return "No Show";
+        case 3:
+            return "Being Served";
+        case 4:
+            return "Serviced";
+        default:
+            return "Abandoned"
+    }
+}
+
   return (
     <div style={{
         backgroundColor:'white',
@@ -22,6 +40,7 @@ const TokenCard = ({token}) => {
            alignItems:'center'
         }}>
         <h3 className='mb_1' >{token.serviceName}</h3>
+        <h3 className='mb_1' >{getStatus(token.status)}</h3>
         <h3>{token.waitingTime} min</h3>
         </div>
 

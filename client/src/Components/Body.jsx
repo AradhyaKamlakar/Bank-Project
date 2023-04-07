@@ -39,7 +39,8 @@ export const Body = () => {
       {
         rootUser.role === 'Customer' ? <Customer /> : 
         rootUser.role === 'Manager' ? <Manager /> :
-        <Counter />
+        rootUser.role === 'Counter' ? <Counter /> : 
+        null
       }
     </>
   )

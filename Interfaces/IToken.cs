@@ -16,6 +16,12 @@ namespace Bank.Interfaces
         public Token GetToken(int tokenId);
 
         public Token GetTokenByUserId(int userId);
+        public void SetCurrentToken(Token t);
+
+        public Token GetCurrentToken();
+        public void SetCurrentUserToken(Token t);
+
+        public Token GetCurrentUserToken();
 
        // public List<Token> AddToQueue(Token token);
         public List<Token> UpdateQueue();

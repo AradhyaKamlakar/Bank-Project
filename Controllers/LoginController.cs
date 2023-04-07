@@ -49,6 +49,12 @@ namespace Bank.Controllers
             return NotFound();
         }
 
+        [HttpGet("get-user-by-id/{id}")]
+        public IActionResult GetUserById(int id)
+        {
+            return Ok(_iuser.GetUserById(id));
+        }
+
 
     }
 }

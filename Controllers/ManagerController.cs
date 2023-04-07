@@ -10,10 +10,14 @@ namespace Bank.Controllers
     public class ManagerController: Controller
     {
         public readonly IService _iservice;
-        public ManagerController(IService service) 
+        public readonly IToken _itoken;
+        public ManagerController(IService service, IToken itoken) 
         {
             _iservice = service;
+            _itoken = itoken;
         }
+
+
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Service>))]
@@ -91,6 +95,19 @@ namespace Bank.Controllers
 
             // Return a 204 No Content response
             return NoContent();
+        }
+
+        [HttpGet("get-all-tokens")]
+        public IActionResult GetAllTokes()
+        {
+            return Ok(_itoken.GetTokens());
+        }
+
+        [HttpPost("set-current-token")]
+        public IActionResult SetCurrentToken(Token t)
+        {
+            _itoken.SetCurrentToken(t);
+            return Ok("current token is set");
         }
 
 

@@ -20,6 +20,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -36,6 +37,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -43,13 +45,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-
 app.MapControllers();
+
 
 app.Run();
