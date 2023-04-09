@@ -14,10 +14,9 @@ namespace Bank.Controllers
             _itoken = itoken;
         }
 
-        [HttpPut("serviced")]
+        [HttpGet("serviced/{tokenId}")]
         public IActionResult ChangeStatusService(int tokenId)
-        {
-           
+        {    
             return Ok(_itoken.ChangeStatusToServiced(tokenId));
         }
 

@@ -38,13 +38,18 @@ namespace Bank.Controllers
         [HttpPost("getUser")]
         public IActionResult GetUser(User u)
         {
-            var existingUser = _iuser.GetUsers();
-            foreach (var user in existingUser)
+            //var existingUser = _iuser.GetUsers();
+            //foreach (var user in existingUser)
+            //{
+            //    if (user.Id == u.Id)
+            //    {
+            //        return Ok(user);
+            //    }
+            //}
+            var _user = _iuser.GetUserByUserId(u.Id);
+            if(_user != null)
             {
-                if (user.Id == u.Id)
-                {
-                    return Ok(user);
-                }
+                return Ok(_user);
             }
             return NotFound();
         }

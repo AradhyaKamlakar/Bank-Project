@@ -55,6 +55,12 @@ const CounterPage = () => {
         });
     }
 
+    const setServicedStatus = () => {
+        Api.counter.setServicedStatus(userToken.tokenId).then((data) => {
+            console.log(data);
+        });
+    }
+
 
     return (
         <div style={{
@@ -90,7 +96,7 @@ const CounterPage = () => {
                     </Alert>
                 }
 
-                <Button variant='contained' disabled={
+                <Button variant='contained' onClick={setServicedStatus} disabled={
                     userToken.tokenNumber !== counterToken.tokenNumber ||
                     userToken.serviceName !== counterToken.serviceName
                 } color='success' style={{

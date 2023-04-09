@@ -28,6 +28,10 @@ namespace Bank.Repository
         {
             return _context.Users.OrderBy(x => x.Id).ToList();
         }
-
+        
+        public User GetUserByUserId(int userid)
+        {
+            return _context.Users.Where(x => x.Id == userid).FirstOrDefault();
+        }
     }
 }

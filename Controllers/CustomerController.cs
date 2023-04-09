@@ -8,7 +8,7 @@ namespace Bank.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class CustomerController : Controller
+    public class CustomerController : ControllerBase
     {
 
         public readonly IToken _itoken;

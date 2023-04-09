@@ -74,6 +74,10 @@ class Counter {
     return getRequest(`/Counter/no-show/${id}`);
   }
 
+  setServicedStatus(id){
+    return getRequest(`/Counter/serviced/${id}`);
+  }
+
 }
 
 export const Api = {

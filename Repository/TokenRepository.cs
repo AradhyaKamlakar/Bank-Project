@@ -73,41 +73,7 @@ namespace Bank.Repository
             _context.Tokens.Add(token);
             _context.SaveChanges();
 
-            return token;
-
-            //var services = from service in _context.Services select service;
-          
-            //string serviceName = "";
-
-            //int serviceTime = 0;
-
-            //foreach(var service in services)
-            //{
-            //    if(service.Id == ServiceId) 
-            //    {
-            //        serviceName = service.ServiceName;
-            //        serviceTime = service.ServiceTime;
-            //    }
-            //}
-
-            ////First Calculate waiting time required for new token
-            //int waitingTime = tokenQueue[tokenQueue.Count - 1].WaitingTime + serviceTime;
-            //Token token = new Token()
-            //{
-            //    TokenNumber = TokenNumberGenerator(),
-            //    ServiceName = serviceName,
-            //    Status = (int)Status.Pending,
-            //    WaitingTime = waitingTime,
-            //    NoShowCount = 0,
-            //    TokenGenerationTime = DateTime.Now,
-            //    UserId = UserId,
-            //};
-            //tokenQueue.Add(token);
-            ////WaitingTimeGenerator(tokenQueue);
-            //_context.Tokens.Add(token);
-            //_context.SaveChanges();
-            //return token;
-            
+            return token; 
         }
 
         public ICollection<Token> GetTokens()
@@ -177,15 +143,13 @@ namespace Bank.Repository
 
         public Token ChangeStatusToNoShowOrAbandoned(int tokenId)
         {
-           // Token token = GetToken(tokenId);
             var tokens = _context.Tokens;
 
             Token token = _context.Tokens.SingleOrDefault((t) => t.TokenId == tokenId);
             if(token.Status == (int)Status.Pending)
             {
                 token.Status = (int)Status.NoShow;
-                token.NoShowCount += 1;
-                
+                token.NoShowCount += 1;  
             }
 
             else if(token.Status == (int)Status.NoShow && token.NoShowCount < 3)
@@ -263,24 +227,16 @@ namespace Bank.Repository
             tokenQueue.Add(first);
         }
 
-        public bool DeleteToken(Token token)
-        {
-
-            tokenQueue.Remove(token);
-            _context.Tokens.Remove(token);
-            WaitingTimeGenerator();
-            _context.SaveChanges();
-            return true;
-        }
-
         public void DeleteT(int tokenId)
         {
             Token token = GetToken(tokenId);
 
             if (token.Status == (int)Status.Serviced || token.Status == (int)Status.Abandoned)
             {
-                DeleteToken(token);
-                
+                tokenQueue.Remove(token);
+                _context.Tokens.Remove(token);
+                WaitingTimeGenerator();
+                _context.SaveChanges();
             }
         }
 
