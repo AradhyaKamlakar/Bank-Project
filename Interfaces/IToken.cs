@@ -11,7 +11,7 @@ namespace Bank.Interfaces
         public Token ChangeStatusToServiced(int tokenId);
 
         public Token ChangeStatusToNoShowOrAbandoned(int tokenId);
-        public void DeleteT(int tokenId);
+        public bool DeleteT(int tokenId);
         public Token GetToken(int tokenId);
 
         public Token GetTokenByUserId(int userId);

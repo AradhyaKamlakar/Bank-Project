@@ -36,6 +36,7 @@ import {
 } from 'react-router-dom'
 import WaitingRoom from '../Components/Customer/WaitingRoom/WaitingRoom';
 import Timeline from '../Components/Customer/CustomerTimeline/Timeline';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -114,6 +115,15 @@ export default function Customer() {
     }
     
   ]
+
+  const navigate = useNavigate();
+
+  const LogoutFunction = () => {
+    //console.log("In Logout f");
+    localStorage.removeItem('user_auth');
+    navigate('/login');
+    //console.log("After nav");
+  };
 
   return (
     <Box sx={{ display: 'flex' }} style={{
@@ -213,7 +223,8 @@ export default function Customer() {
           ))}
           <Divider sx={{ my:1 }}/>
           <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
+              <ListItemButton 
+                onClick = {LogoutFunction}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',

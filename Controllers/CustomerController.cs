@@ -22,14 +22,15 @@ namespace Bank.Controllers
         public IActionResult CreateToken(int UserId, int ServiceId)
         {
             Token t = _itoken.CreateToken(UserId, ServiceId);
-            if (Convert.ToBoolean(t))
-            {
-                return Ok(t);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+            //if (t.ToString() != null)
+            //{
+            //    return Ok(t);
+            //}
+            //else
+            //{
+            //    return BadRequest(ModelState);
+            //}
+            return Ok(t);
         }
 
 

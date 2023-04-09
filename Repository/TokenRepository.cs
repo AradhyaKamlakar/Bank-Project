@@ -50,7 +50,7 @@ namespace Bank.Repository
 
                 foreach (var service in services)
                 {
-                    if (service.ServiceName == tokenQueue[tokenQueue.Count -1].ServiceName)
+                    if (service.ServiceName == tokenQueue[tokenQueue.Count - 1].ServiceName)
                     {
                         serviceTime = service.ServiceTime;
                         break;
@@ -146,6 +146,7 @@ namespace Bank.Repository
             var tokens = _context.Tokens;
 
             Token token = _context.Tokens.SingleOrDefault((t) => t.TokenId == tokenId);
+     
             if(token.Status == (int)Status.Pending)
             {
                 token.Status = (int)Status.NoShow;
@@ -170,10 +171,21 @@ namespace Bank.Repository
             }
             else
             {
+                int serviceTime = 0;
                 RearrangeTokenQueue();
-                Service service = _context.Services.SingleOrDefault((ser) => ser.ServiceName == tokenQueue[tokenQueue.Count - 1].ServiceName);
-                int serviceTime = service.ServiceTime;
-                token.WaitingTime = serviceTime + tokenQueue[tokenQueue.Count - 1].WaitingTime;
+                if (tokenQueue.Count() == 1)
+                {
+                    serviceTime = 0;
+                    token.WaitingTime = serviceTime;
+                }
+                else
+                {
+                    Service service = _context.Services.SingleOrDefault((ser) => ser.ServiceName == tokenQueue[tokenQueue.Count - 1].ServiceName);
+                    serviceTime = service.ServiceTime;
+                    token.WaitingTime = serviceTime + tokenQueue[tokenQueue.Count - 1].WaitingTime;
+                }
+                
+                
                 tokenQueue.Add(token);
             }
 
@@ -227,17 +239,19 @@ namespace Bank.Repository
             tokenQueue.Add(first);
         }
 
-        public void DeleteT(int tokenId)
+        public bool DeleteT(int tokenId)
         {
             Token token = GetToken(tokenId);
-
+            
             if (token.Status == (int)Status.Serviced || token.Status == (int)Status.Abandoned)
             {
                 tokenQueue.Remove(token);
                 _context.Tokens.Remove(token);
                 WaitingTimeGenerator();
                 _context.SaveChanges();
+                return true;
             }
+            return false;
         }
 
         public List<Token> UpdateQueue()
@@ -253,22 +267,6 @@ namespace Bank.Repository
             return tokenQueue;
         }
       
-
-    //public List<Token> AddToQueue(Token token)
-    //    {
-    //        if (tokenQueue.IsNullOrEmpty())
-    //        {
-    //            token.WaitingTime = 0;
-    //            tokenQueue.Add(token);
-    //            return tokenQueue.ToList();
-    //        }
-    //        else
-    //        {
-    //            tokenQueue.Add(token);
-    //            return tokenQueue.ToList();
-    //        }
-    //    }
-
         public int TokenNumberGenerator()
         {
             tokenGen:

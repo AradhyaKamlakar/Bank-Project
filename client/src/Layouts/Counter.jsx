@@ -124,6 +124,13 @@ export default function Counter() {
     
   ]
 
+  const LogoutFunction = () => {
+    //console.log("In Logout f");
+    localStorage.removeItem('user_auth');
+    navigate('/login');
+    //console.log("After nav");
+  };
+
   return (
     <Box sx={{ display: 'flex' }} style={{
       backgroundColor : 'transparent'
@@ -225,6 +232,7 @@ export default function Counter() {
           <Divider sx={{ my:1 }}/>
           <ListItem disablePadding sx={{ display: 'block' }}>
               <ListItemButton
+                onClick = {LogoutFunction}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',

@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { Api } from '../../../Utils/Api';
-import { AppContext } from '../../../App';
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { Api } from "../../../Utils/Api";
+import { AppContext } from "../../../App";
 
 const ITEM_HEIGHT = 50;
 const ITEM_PADDING_TOP = 8;
@@ -20,16 +20,16 @@ const MenuProps = {
 };
 
 const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder",
 ];
 
 function getStyles(name, personName, theme) {
@@ -45,39 +45,31 @@ export default function MultipleSelect({ setSelectedService }) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
 
-  const [services, setServices] = React.useState([])
+  const [services, setServices] = React.useState([]);
 
-  const {rootUser} = React.useContext(AppContext)
-
+  const { rootUser } = React.useContext(AppContext);
 
   const getServices = async () => {
-
     try {
-
       Api.service.getServices().then((data) => {
         setServices(data);
-      })
-
-    } catch (error) {
-
-    }
-
-  }
-
+      });
+    } catch (error) {}
+  };
 
   React.useEffect(() => {
     getServices();
-  }, [])
+  }, []);
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setSelectedService(value)
+    setSelectedService(value);
     console.log(value);
     setPersonName(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
@@ -92,7 +84,7 @@ export default function MultipleSelect({ setSelectedService }) {
           onChange={handleChange}
           input={<OutlinedInput label="Service" notched={false} />}
           MenuProps={MenuProps}
-          size='small'
+          size="small"
         >
           {services.map((service) => (
             <MenuItem

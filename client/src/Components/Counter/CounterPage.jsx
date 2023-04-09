@@ -7,6 +7,7 @@ const CounterPage = () => {
 
     const [userToken, setUserToken] = useState('#####')
     const [counterToken, setCounterToken] = useState(12345)
+    const [msg, setMsg] = useState(' ')
 
 
 
@@ -52,12 +53,23 @@ const CounterPage = () => {
     const setNoShowStatus = () => {
         Api.counter.setNoShowStatus(userToken.tokenId).then((data) => {
             console.log(data);
+            if(data === true)
+            printMsgAbandoned();
         });
+    }
+
+    const printMsgServiced = () => {
+        setMsg("Token Serviced");
+    }
+
+    const printMsgAbandoned = () => {
+        setMsg("Token Abandoned");
     }
 
     const setServicedStatus = () => {
         Api.counter.setServicedStatus(userToken.tokenId).then((data) => {
             console.log(data);
+            printMsgServiced();
         });
     }
 
@@ -65,6 +77,7 @@ const CounterPage = () => {
     return (
         <div style={{
             display: 'flex',
+            
             width: '100%',
             height: '80vh',
             justifyContent: 'center',
@@ -96,6 +109,7 @@ const CounterPage = () => {
                     </Alert>
                 }
 
+                <h3>{msg}</h3>
                 <Button variant='contained' onClick={setServicedStatus} disabled={
                     userToken.tokenNumber !== counterToken.tokenNumber ||
                     userToken.serviceName !== counterToken.serviceName

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Api } from '../../../Utils/Api';
 import TokenCard from './TokenCard';
 import { useNavigate } from 'react-router';
+import buzzerSound from './buzzer.mp3';
 
 const CurrentToken = () => {
 
@@ -16,8 +17,11 @@ const CurrentToken = () => {
 
     const navigate = useNavigate();
 
+    const buzzer = new Audio(buzzerSound);
+
     const RaiseBuzzer = async () => {
         console.log("under buzzer");
+        buzzer.play();
         Api.token.setCurrentToken(currentToken).then((res) => {
             console.log(res);
         })

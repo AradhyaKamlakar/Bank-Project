@@ -23,7 +23,9 @@ namespace Bank.Controllers
         [HttpGet("no-show/{tokenId}")]
         public IActionResult ChangeStatusNoShow(int tokenId)
         {
-            return Ok(_itoken.ChangeStatusToNoShowOrAbandoned(tokenId));
+            _itoken.ChangeStatusToNoShowOrAbandoned(tokenId);
+            _itoken.DeleteT(tokenId);
+            return Ok(_itoken.DeleteT(tokenId));
         }
 
         [HttpGet("get-current-user-token")]
