@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IService, ServiceRepository>();
 builder.Services.AddScoped<IUser, UserRepository>();  
 builder.Services.AddScoped<IToken, TokenRepository>();
+builder.Services.AddScoped<IHistory, HistoryRepository>();
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))

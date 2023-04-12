@@ -135,6 +135,8 @@ namespace Bank.Repository
             Token token = GetToken(tokenId);
             token.Status = (int)Status.Serviced;
             _context.Tokens.Update(token);
+
+            //write code to add token to history
             DeleteT(tokenId);
             _context.SaveChanges(); 
             UpdateQueue();
