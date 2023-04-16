@@ -144,7 +144,11 @@ namespace Bank.Repository
             DeleteT(tokenId);
             _context.SaveChanges(); 
             UpdateQueue();
-            return(token);
+
+            CurrentUserToken = new Token();
+            CurrentToken = new Token();
+
+            return (token);
         }
 
         public Token ChangeStatusToNoShowOrAbandoned(int tokenId)
@@ -195,7 +199,7 @@ namespace Bank.Repository
                 tokenQueue.Add(token);
             }
 
-
+            CurrentUserToken = new Token();
             CurrentToken = token;
             _context.Tokens.Update(token);
             _context.SaveChanges();

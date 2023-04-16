@@ -35,6 +35,21 @@ const Timeline = () => {
 
     const [progress, setProgress] = useState(true)
     
+    
+  const getStatus = (id) => {
+    switch  (id) {
+        case 0:
+            return "Pending";
+        case 1:
+            return "No Show";
+        case 3:
+            return "Being Served";
+        case 4:
+            return "Serviced";
+        default:
+            return "Abandoned"
+    }
+}
 
 
     const getToken = async () => {
@@ -176,7 +191,7 @@ const Timeline = () => {
                                 <CountertopsIcon />
                             </div>
                             <div style={{ marginLeft: '1rem' }}>
-
+                                <p>{token.serviceName}</p>
                                 <h2>
                                     Service Counter
                                 </h2>
@@ -206,6 +221,7 @@ const Timeline = () => {
                                 <h2>
                                     Status
                                 </h2>
+                                <p>{getStatus(token.status)}</p>
                             </div>
                         </div>
                     </Item>

@@ -53,7 +53,7 @@ class Token {
   setCurrentToken(token) {
     return postRequest('/Manager/set-current-token', token);
   }
-
+  
   getCurrentToken(){
     return getRequest(`/Customer/get-current-token`);
   }
@@ -65,7 +65,10 @@ class Token {
   getCurrentUserToken(){
     return getRequest('/Counter/get-current-user-token');
   }
-
+  
+  getHistoryTokens(){
+    return getRequest(`/Manager/get-all-history-of-tokens`);
+  }
 }
 
 class Counter {
@@ -77,6 +80,7 @@ class Counter {
   setServicedStatus(id){
     return getRequest(`/Counter/serviced/${id}`);
   }
+
 
 }
 

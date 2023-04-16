@@ -25,6 +25,7 @@ import TokenRoundedIcon from '@mui/icons-material/TokenRounded';
 import TvRoundedIcon from '@mui/icons-material/TvRounded';
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import HistoryIcon from '@mui/icons-material/History';
 
 import logo from '../Assets/logo.png';
 import Token from '../Components/Customer/Token/Token';
@@ -43,6 +44,7 @@ import Services from '../Components/Manager/CreateServices/Services';
 import CountertopsIcon from '@mui/icons-material/Countertops';
 import { Api } from '../Utils/Api';
 import { AppContext } from '../App';
+import EnhancedTable from '../Components/Manager/History/Table';
 
 
 const drawerWidth = 240;
@@ -124,6 +126,11 @@ export default function Manager() {
       name : 'Catch All Counter',
       icon : <FormatListBulletedIcon />,
       path : '/catchall'
+    },
+    {
+      name : 'Token History',
+      icon : <HistoryIcon />,
+      path : '/token-history'
     },
     
   ]
@@ -265,6 +272,7 @@ export default function Manager() {
           <Route exact path='/customer-timeline' element={<Timeline />} /> */}
             <Route exact path='/' element={ <Services /> } />
             <Route exact path='/catchall' element={ <CatchAllCounter /> } />
+            <Route exact path='/token-history' element={ <EnhancedTable /> } />
         </Routes>
 
       </Box>

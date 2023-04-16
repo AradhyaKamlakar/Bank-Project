@@ -8,6 +8,7 @@ namespace Bank.Controllers
     public class CounterController: ControllerBase
     {
         public readonly IToken _itoken;
+        public readonly IHistory _ihistory;
 
         public CounterController(IToken itoken)
         {
@@ -33,5 +34,6 @@ namespace Bank.Controllers
         {
             return Ok(_itoken.GetCurrentUserToken());
         }
+
     }
 }
