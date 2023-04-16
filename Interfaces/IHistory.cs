@@ -6,7 +6,7 @@ namespace Bank.Interfaces
     {
         ICollection<History> GetTokensHistory();
 
-        public void AddToTokenHistory(History token);
+        public void AddToTokenHistory(Token token);
 
         public bool DeleteFromTokenHistory(History token);
     }

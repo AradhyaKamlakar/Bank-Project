@@ -136,7 +136,7 @@ const Timeline = () => {
                                 }} >
                                     <div>
 
-                                        Manager
+                                        Cash All
                                     </div>
                                     {
                                         progress &&

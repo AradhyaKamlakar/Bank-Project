@@ -15,19 +15,18 @@ namespace Bank.Migrations
                 name: "History",
                 columns: table => new
                 {
-                    TokenId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TokenId = table.Column<int>(type: "int", nullable: false),
                     TokenNumber = table.Column<int>(type: "int", nullable: false),
                     ServiceName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    WaitingTime = table.Column<int>(type: "int", nullable: false),
-                    NoShowCount = table.Column<int>(type: "int", nullable: false),
                     TokenGenerationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_History", x => x.TokenId);
+                    table.PrimaryKey("PK_History", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(

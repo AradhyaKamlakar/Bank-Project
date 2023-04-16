@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bank.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230410115743_InitialCreate")]
+    [Migration("20230416120207_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,14 +27,11 @@ namespace Bank.Migrations
 
             modelBuilder.Entity("Bank.Model.History", b =>
                 {
-                    b.Property<int>("TokenId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TokenId"));
-
-                    b.Property<int>("NoShowCount")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
@@ -47,16 +44,16 @@ namespace Bank.Migrations
                     b.Property<DateTime>("TokenGenerationTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("TokenId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TokenNumber")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WaitingTime")
-                        .HasColumnType("int");
-
-                    b.HasKey("TokenId");
+                    b.HasKey("Id");
 
                     b.ToTable("History");
                 });

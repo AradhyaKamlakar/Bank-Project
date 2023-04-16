@@ -4,6 +4,7 @@ using Bank.Interfaces;
 using Bank.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using static Bank.Repository.HistoryRepository;
 
 namespace Bank.Repository
 {
@@ -18,13 +19,15 @@ namespace Bank.Repository
     public class TokenRepository: IToken
     {
         private readonly DataContext _context;
+        private readonly IHistory _ihistory;
         public static List<Token> tokenQueue = new List<Token>();
         public static Token CurrentToken = new Token();
         public static Token CurrentUserToken = new Token();
-        public TokenRepository(DataContext context)
+        public TokenRepository(DataContext context, IHistory ihistory)
         {
             _context = context;
             UpdateQueue();
+            _ihistory = ihistory;
         }
 
         //This function creates the token for the user and add it to the list.
@@ -137,6 +140,7 @@ namespace Bank.Repository
             _context.Tokens.Update(token);
 
             //write code to add token to history
+            _ihistory.AddToTokenHistory(token);
             DeleteT(tokenId);
             _context.SaveChanges(); 
             UpdateQueue();

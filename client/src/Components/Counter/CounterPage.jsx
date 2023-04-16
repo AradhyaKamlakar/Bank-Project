@@ -102,9 +102,9 @@ const CounterPage = () => {
 
                 {
                     userToken &&
-                    <Alert style={{ marginBottom: '1rem' }} severity={userToken.tokenNumber === counterToken.tokenNumber ? 'success' : 'error'}>
+                    <Alert style={{ marginBottom: '1rem' }} severity={((userToken.tokenNumber === counterToken.tokenNumber) && userToken !== 0) ? 'success' : 'error'}>
                         {
-                            userToken.tokenNumber === counterToken.tokenNumber ? "Token Match" : "Token Not Match"
+                            ((userToken.tokenNumber === counterToken.tokenNumber) && counterToken !== "0") ? "Token Match" : "Token Not Match"
                         }
                     </Alert>
                 }

@@ -12,9 +12,18 @@ namespace Bank.Repository
         {
             _context = context;
         }
-        public void AddToTokenHistory(History token)
+        public void AddToTokenHistory(Token token)
         {
-            _context.History.Add(token);
+            History history = new History()
+            {
+                TokenId = token.TokenId,
+                TokenNumber = token.TokenNumber,
+                ServiceName = token.ServiceName,
+                Status = token.Status,
+                TokenGenerationTime = token.TokenGenerationTime,
+                UserId = token.UserId,
+            };
+            _context.History.Add(history);
             _context.SaveChanges();
             return;
         }

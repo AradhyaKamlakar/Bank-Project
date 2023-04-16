@@ -11,10 +11,12 @@ namespace Bank.Controllers
     {
         public readonly IService _iservice;
         public readonly IToken _itoken;
-        public ManagerController(IService service, IToken itoken) 
+        public readonly IHistory _ihistory;
+        public ManagerController(IService service, IToken itoken, IHistory ihistory) 
         {
             _iservice = service;
             _itoken = itoken;
+            _ihistory = ihistory;
         }
 
 
@@ -110,6 +112,11 @@ namespace Bank.Controllers
             return Ok("current token is set");
         }
 
+        [HttpGet("get-all-history-of-tokens")]
+        public IActionResult GetHistory()
+        {
+            return Ok(_ihistory.GetTokensHistory());
+        }
 
     }
 }

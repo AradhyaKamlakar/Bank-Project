@@ -104,7 +104,7 @@ export default function WaitingRoom() {
               {
                 token.tokenNumber === managerToken.tokenNumber &&
                 <Button variant='contained' onClick={gotoTimeline}>
-                  Go to Manager
+                  Go to Cash All Counter
                 </Button>
               }
             </div>
