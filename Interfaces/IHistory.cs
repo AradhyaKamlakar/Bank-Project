@@ -10,5 +10,7 @@ namespace Bank.Interfaces
 
         public bool DeleteFromTokenHistory(History token);
 
+        public History GetTokenById();
+
     }
 }

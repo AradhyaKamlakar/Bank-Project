@@ -16,6 +16,8 @@ class User {
     return getRequest(`/Login/get-user-by-id/${id}`)
   }
 
+
+
 }
 
 class Service {
@@ -69,6 +71,11 @@ class Token {
   getHistoryTokens(){
     return getRequest(`/Manager/get-all-history-of-tokens`);
   }
+
+  getHistoryTokenById(){
+    return getRequest(`/Customer/get-history-token`)
+  }
+
 }
 
 class Counter {

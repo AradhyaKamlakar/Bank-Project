@@ -3,7 +3,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CountertopsIcon from '@mui/icons-material/Countertops';
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 
-import { Button, CircularProgress, Divider, IconButton } from '@mui/material';
+import { Alert, Button, CircularProgress, Divider, IconButton } from '@mui/material';
 
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -13,6 +13,7 @@ import { Avatar } from '@mui/material';
 import { Api } from '../../../Utils/Api';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../../App';
+import MaxWidthDialog from './Dialog';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,76 +34,64 @@ const Timeline = () => {
 
     const [token, setToken] = React.useState({})
 
-    const [progress, setProgress] = useState(true)
-    
-    
-  const getStatus = (id) => {
-    switch  (id) {
-        case 0:
-            return "Pending";
-        case 1:
-            return "No Show";
-        case 3:
-            return "Being Served";
-        case 4:
-            return "Serviced";
-        default:
-            return "Abandoned"
-    }
-}
+    const [progress, setProgress] = useState(false)
 
+
+    const getStatus = (id) => {
+        switch (id) {
+            case 0:
+                return "Pending";
+            case 1:
+                return "No Show";
+            case 2:
+                return "Being Served";
+            case 3:
+                return "Serviced";
+            default:
+                return "Abandoned"
+        }
+    }
+
+
+    const [open, setOpen] = useState(false)
 
     const getToken = async () => {
         try {
-            setProgress(true);
             Api.token.getTokenByUserId(rootUser.id).then((data) => {
                 if (data.tokenId) {
                     console.log('token found');
                     console.log(data);
                     setToken(data)
                 } else {
-                    navigate('/')
+                    Api.token.getHistoryTokenById().then((data)=>{
+                        console.log(data);
+                        setToken(data)
+                        setOpen(true);
+                    })
+                    // navigate('/')
                 }
             })
 
-            setTimeout(() => {
-                setProgress(false);
-            }, 5000);
+
 
         } catch (error) {
 
         }
-    }
-
-
-
-    const [services, setServices] = React.useState([])
-
-
-
-    const getServices = async () => {
-
-        try {
-
-            Api.service.getServices().then((data) => {
-                setServices(data);
-            })
-
-        } catch (error) {
-
-        }
-
     }
 
 
     useEffect(() => {
-        getToken();
-        getServices();
+
+            const interval = setInterval(() => {
+                getToken();
+            }, 3000);
+
+            return () => clearInterval(interval);
     }, [])
 
 
-    const gotoServiceCounter = ()  => {
-        Api.token.setCurrentUserToken(token).then((data)=>{
+    const gotoServiceCounter = () => {
+        Api.token.setCurrentUserToken(token).then((data) => {
             console.log(data);
         })
     }
@@ -121,6 +110,14 @@ const Timeline = () => {
             flexDirection: 'column',
             padding: '1rem'
         }}>
+            {/* <div style={{
+                position:'absolute',
+
+            }} >
+
+                <Alert severity="success">This is a success alert — check it out!</Alert>
+            </div> */}
+            <MaxWidthDialog open={open} setOpen={setOpen} data={token} />
 
             <Grid container spacing={{ xs: 5, md: 10 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 
@@ -163,15 +160,15 @@ const Timeline = () => {
                         </div>
 
                     </Item>
-                   {
-                    !progress && 
-                    <Button variant='contained' onClick={gotoServiceCounter}  style={{
-                        width:'100%',
-                        marginTop : '1rem'
-                    }} >  
-                        Go To Service
-                    </Button>
-                   }
+                    {
+                        !progress &&
+                        <Button variant='contained' onClick={gotoServiceCounter} style={{
+                            width: '100%',
+                            marginTop: '1rem'
+                        }} >
+                            Go To Service
+                        </Button>
+                    }
                 </Grid>
                 <Grid item xs={12} sm={12} md={4} >
                     <Item style={{

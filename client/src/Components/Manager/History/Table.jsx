@@ -225,9 +225,9 @@ export default function EnhancedTable() {
             return "Pending";
         case 1:
             return "No Show";
-        case 3:
+        case 2:
             return "Being Served";
-        case 4:
+        case 3:
             return "Serviced";
         default:
             return "Abandoned"

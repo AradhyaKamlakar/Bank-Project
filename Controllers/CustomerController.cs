@@ -12,10 +12,12 @@ namespace Bank.Controllers
     {
 
         public readonly IToken _itoken;
+        public readonly IHistory _ihistory;
 
-        public CustomerController(IToken itoken)
+        public CustomerController(IToken itoken, IHistory ihistory)
         {
             _itoken = itoken;
+            _ihistory= ihistory;
         }
 
         [HttpGet("create-token/{UserId}/{ServiceId}")]
@@ -53,6 +55,13 @@ namespace Bank.Controllers
         {
             _itoken.SetCurrentUserToken(t);
             return Ok("current user token set");
+        }
+
+
+        [HttpGet("get-history-token")]
+        public IActionResult GetHistoryToken()
+        {
+            return Ok(_ihistory.GetTokenById());
         }
 
     }

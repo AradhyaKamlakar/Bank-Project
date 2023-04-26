@@ -39,5 +39,10 @@ namespace Bank.Repository
         {
             return _context.History.OrderBy(x => x.TokenId).ToList();
         }
+
+        public History GetTokenById()
+        {
+            return _context.History.OrderByDescending(t => t.TokenGenerationTime).FirstOrDefault();
+        }
     }
 }

@@ -51,7 +51,7 @@ const CounterPage = () => {
 
 
     const setNoShowStatus = () => {
-        Api.counter.setNoShowStatus(userToken.tokenId).then((data) => {
+        Api.counter.setNoShowStatus(counterToken.tokenId).then((data) => {
             console.log(data);
             if(data === true)
             printMsgAbandoned();
@@ -109,7 +109,7 @@ const CounterPage = () => {
                     </Alert>
                 }
 
-                <h3>{msg}</h3>
+                {/* <h3>{msg}</h3> */}
                 <Button variant='contained' onClick={setServicedStatus} disabled={
                     userToken.tokenNumber !== counterToken.tokenNumber ||
                     userToken.serviceName !== counterToken.serviceName
